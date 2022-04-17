@@ -1,0 +1,15 @@
+apiVersion: 1
+
+datasources:
+  - name: Postgres
+    type: postgres
+    access: proxy
+    url: postgres:5432
+    user: analytics
+    database: analytics
+    jsonData:
+      postgresVersion: 1200
+      sslmode: 'disable'
+    secureJsonData:
+      password: 'analytics'
+
