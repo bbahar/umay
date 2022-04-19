@@ -4,8 +4,8 @@ services:
     image: grafana/grafana
     restart: always
     environment:
-      GF_AUTH_ANONYMOUS_ENABLED: "true"
-      GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+      # GF_AUTH_ANONYMOUS_ENABLED: "true"
+      # GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
       GF_DATABASE_TYPE: "postgres"
       GF_DATABASE_HOST: "postgres:5432"
       GF_DATABASE_USER: "grafana"
