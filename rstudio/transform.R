@@ -3,13 +3,43 @@ library(readr)
 library(tidyverse)
 library(lubridate)
 laborder <- read_csv("laborder.csv", show_col_types = FALSE)
-# attributes(laborder)$spec
+# attributes of laborder.csv
+# cols(
+#  MRN = col_character(),
+#  FIN = col_character(),
+#  Patient_Loc = col_character(),
+#  Hgb_Date = col_character(),
+#  Result = col_double()
+# )
 bridge <- read_csv("transfusion.csv", show_col_types = FALSE)
-# attributes(transfusion)$spec
+# attributes of transfusion.csv
+# cols(
+#  `Encounter id` = col_double(),
+#  `Event Id` = col_double(),
+#  `Clinical Event Id` = col_double(),
+#  `Parent Event Id` = col_double(),
+#  `MRN- Organization` = col_double(),
+#  `Financial Number` = col_double(),
+#  `Age- Days (Visit)` = col_double(),
+#  `Age- Years (Visit)` = col_double(),
+#  `Clinical Event` = col_character(),
+#  `Clinical Event Result Type` = col_character(),
+#  `Clinical Event Result Units` = col_character(),
+#  `Clinical Event Result` = col_character(),
+#  `Clinical Sig Update Date & Time` = col_character()
+# )
 antibody <- read_csv("antibody.csv", show_col_types = FALSE)
-# attributes(antibody)$spec
+# attributes of antibody.csv
+# cols(
+#  FIN = col_double(),
+#  Antibody = col_character()
+# )
 bloodgroup <- read_csv("bloodgroup.csv", show_col_types = FALSE)
-# attributes(bloodgroup)$spec
+# attributes of bloodgroup.csv
+# cols(
+#  FIN = col_double(),
+#  `Blood group` = col_character()
+# )
 laborder$FIN <- str_replace(laborder$FIN, "-", "")
 laborder$FIN <- as.numeric(laborder$FIN)
 laborder$DT_hgb <- mdy_hm(laborder$Hgb_Date)
