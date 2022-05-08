@@ -22,7 +22,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "iteration": 1651712184884,
+  "iteration": 1651966886283,
   "links": [
     {
       "asDropdown": false,
@@ -772,6 +772,159 @@
         "type": "postgres",
         "uid": "P44368ADAD746BC27"
       },
+      "description": "",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "smooth",
+            "lineStyle": {
+              "fill": "solid"
+            },
+            "lineWidth": 3,
+            "pointSize": 10,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 10
+              },
+              {
+                "color": "red",
+                "value": 15
+              }
+            ]
+          },
+          "unit": "h"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 37,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      },
+      "pluginVersion": "8.3.5",
+      "targets": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "P44368ADAD746BC27"
+          },
+          "format": "time_series",
+          "group": [
+            {
+              "params": [
+                "$query3",
+                "none"
+              ],
+              "type": "time"
+            }
+          ],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  $__timeGroupAlias(time,$query3),\n  avg(hours) AS \"hours\"\nFROM transfusion_hgb_2021\nWHERE\n  $__timeFilter(time) AND\n  blood_group IN ($query0) AND\n  level IN ($query1) AND\n  antibody IN ($query2)\nGROUP BY 1\nORDER BY 1",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": [
+                  "hours"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "avg"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "hours"
+                ],
+                "type": "alias"
+              }
+            ]
+          ],
+          "table": "transfusion_hgb_2021",
+          "timeColumn": "time",
+          "timeColumnType": "timestamp",
+          "where": []
+        }
+      ],
+      "title": "Time to transfusion (Moving Average)",
+      "transformations": [
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {},
+            "indexByName": {
+              "A NEG": 1,
+              "A POS": 2,
+              "AB NEG": 5,
+              "AB POS": 6,
+              "B NEG": 3,
+              "B POS": 4,
+              "O NEG": 7,
+              "O POS": 8,
+              "Time": 0
+            },
+            "renameByName": {}
+          }
+        }
+      ],
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "postgres",
+        "uid": "P44368ADAD746BC27"
+      },
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -795,7 +948,7 @@
         "h": 8,
         "w": 8,
         "x": 0,
-        "y": 9
+        "y": 16
       },
       "id": 24,
       "options": {
@@ -898,7 +1051,7 @@
         "h": 8,
         "w": 8,
         "x": 8,
-        "y": 9
+        "y": 16
       },
       "id": 30,
       "options": {
@@ -1013,7 +1166,7 @@
         "h": 4,
         "w": 8,
         "x": 16,
-        "y": 9
+        "y": 16
       },
       "id": 29,
       "options": {
@@ -1119,7 +1272,7 @@
         "h": 4,
         "w": 8,
         "x": 16,
-        "y": 13
+        "y": 20
       },
       "id": 34,
       "options": {
@@ -1258,9 +1411,9 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 17
+        "y": 24
       },
-      "id": 12,
+      "id": 38,
       "options": {
         "legend": {
           "calcs": [],
@@ -1394,7 +1547,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 24
+        "y": 31
       },
       "id": 21,
       "options": {
@@ -1533,7 +1686,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 31
+        "y": 38
       },
       "id": 20,
       "options": {
@@ -1675,7 +1828,7 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 38
+        "y": 45
       },
       "id": 22,
       "options": {
@@ -1778,7 +1931,7 @@
         "h": 10,
         "w": 24,
         "x": 0,
-        "y": 45
+        "y": 52
       },
       "id": 15,
       "options": {
@@ -1926,6 +2079,46 @@
         "skipUrlSync": false,
         "sort": 1,
         "type": "query"
+      },
+      {
+        "auto": false,
+        "auto_count": 30,
+        "auto_min": "10s",
+        "current": {
+          "selected": true,
+          "text": "1d",
+          "value": "1d"
+        },
+        "hide": 0,
+        "label": "Moving average",
+        "name": "query3",
+        "options": [
+          {
+            "selected": true,
+            "text": "1d",
+            "value": "1d"
+          },
+          {
+            "selected": false,
+            "text": "7d",
+            "value": "7d"
+          },
+          {
+            "selected": false,
+            "text": "14d",
+            "value": "14d"
+          },
+          {
+            "selected": false,
+            "text": "30d",
+            "value": "30d"
+          }
+        ],
+        "query": "1d,7d,14d,30d",
+        "queryValue": "",
+        "refresh": 2,
+        "skipUrlSync": false,
+        "type": "interval"
       }
     ]
   },
