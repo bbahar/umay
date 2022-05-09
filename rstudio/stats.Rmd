@@ -1,0 +1,204 @@
+---
+title: "Hemoglobin result to start of RBC transfusion"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+library(ggplot2)
+library(ggpubr)
+library(forcats)
+```
+
+### Hemoglobin result to start of RBC transfusion
+
+```{r data prep, message=FALSE, warning=FALSE, echo=FALSE}
+dat1 <- transfusion_example_table
+dat1$level <- fct_relevel(dat1$level, c('≤4', '>4 to ≤5', '>5 to ≤6', 
+                                        '>6 to ≤7', '>7 to ≤8', '>8 to ≤9', 
+                                        '>9 to ≤10', '>10 to ≤11', '>11 to ≤12', 
+                                        '>12 to ≤13', '>13'))
+dat1$blood_group <- fct_relevel(dat1$blood_group, c('A POS', 'A NEG', 'B POS', 'B NEG',
+                                                    'AB POS', 'AB NEG', 'O POS', 'O NEG'))
+dat1$antibody <- fct_relevel(dat1$antibody, c('NEG', 'POS'))
+```
+
+From `r min(dat1$time)` to `r max(dat1$time)`, `r n_distinct(dat1$mrn)` patients were ordered an hemoglobin measurement which was followed by an RBC transfusion (n=`r nrow(dat1)`) within a 24-hour time period.
+
+# Results {.tabset}
+
+## Time to Transfusion Combined
+
+```{r table1, message=FALSE, warning=FALSE, echo=FALSE}
+knitr::kable(dat1 %>% summarise(n=n(),
+                                  `hgb mean (SD)`=glue::glue('{round(mean(hgb),1)}  ({round(sd(hgb),2)})'), 
+                                  `hgb median (95%CI)`=glue::glue('{median(hgb)}  ({round(quantile(hgb,0.05),1)} - { 
+                                       round(quantile(hgb,0.95),1)})'),
+                                  `Time mean (SD)`=glue::glue('{time_mean=round(mean(hours),1)} ({time_sd=round(sd(hours),2)})'),
+                                  `Time median (95%CI)`=glue::glue('{median(hours)}  ({round(quantile(hours,0.05),1)} - { 
+                                       round(quantile(hours,0.95),1)})')))
+```
+
+```{r plot1, echo=FALSE, fig.height=1.75, fig.width=12, message=FALSE, warning=FALSE}
+ggplot(dat1, aes(x=hgb)) + geom_boxplot() +
+  annotate(geom="point", x=mean(dat1$hgb), y=0.01, colour="black", size=4, shape=5) + 
+  labs(x='hgb levelel (g/dL)', y='') +
+  scale_y_continuous(breaks=NULL)
+```
+
+```{r plot2, echo=FALSE, fig.height=1.75, fig.width=12, message=FALSE, warning=FALSE}
+ggplot(dat1, aes(x=hours)) + geom_boxplot() +
+  annotate(geom="point", x=mean(dat1$hours), y=0.01, colour="black", size=4, shape=5) + 
+  labs(x='hgb result to transfusion (h)', y='') +
+  scale_y_continuous(breaks=NULL)
+```
+
+## Time to transfusion Continuous
+
+```{r plot1a, echo=FALSE, fig.height=10, fig.width=10, message=FALSE, warning=FALSE}
+ggplot(dat1, aes(hgb, hours)) + geom_point(alpha=0.2) + stat_smooth(method = "gam") + 
+  labs(x='hgb (g/dL)', y='Time (h)', title='Time to initiate a transfusion following a hemoglobin result')
+```
+
+## Time to Transfusion Clustered
+
+```{r table2, message=FALSE, warning=FALSE, echo=FALSE}
+t1 <- dat1 %>% group_by(level) %>% summarise(n=n(),
+                                       `hgb mean (SD)`=glue::glue('{round(mean(hgb),1)}  ({round(sd(hgb),2)})'), 
+                                       `Time mean (SD)`=glue::glue('{time_mean=round(mean(hours),1)} ({time_sd=round(sd(hours),2)})'),
+                                       `Time median (95%CI)`=glue::glue('{median(hours)}  ({round(quantile(hours,0.05),1)} - { 
+                                       round(quantile(hours,0.95),1)})')) %>% rename(levelel=level)
+knitr::kable(t1)
+```
+
+```{r plot3, echo=FALSE, fig.height=6, fig.width=8, message=FALSE, warning=FALSE}
+ggboxplot(dat1, x='level', y='hours') +
+  stat_summary(fun = "mean", geom = "point", shape=5) +
+  stat_compare_means(method = "kruskal.test", label.y=25) +
+  labs(y='Time (h)', x='Hb levelel (g/dL)') +
+  rotate_x_text(angle =45) +
+  stat_compare_means(label = "p.signif", method = "wilcox.test", ref.group = "≤4")
+```
+
+## Time Series Combined
+
+```{r plot4, echo=FALSE, fig.height=10, fig.width=10, message=FALSE, warning=FALSE}
+ggplot(dat1, aes(time, hours)) + geom_point(alpha=0.2) + stat_smooth(method = "gam") + 
+  labs(x='Transfusion Date', y='Time (h)', title='Time to initiate a transfusion following a hemoglobin result') +
+  theme_classic2() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## Time Series Clustered
+
+```{r plot5, echo=FALSE, fig.height=10, fig.width=10, message=FALSE, warning=FALSE}
+ggplot(dat1, aes(time, hours)) + geom_point(alpha=0.2) + stat_smooth(method = "gam") + 
+  facet_wrap(~level) + labs(x='Transfusion Date', y='Time (h)', title='Time to initiate a transfusion following a hemoglobin result') + 
+  theme_classic2() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## Time to Transfusion Blood Group Relationship
+
+```{r table3, message=FALSE, warning=FALSE, echo=FALSE}
+t2 <- dat1 %>% group_by(blood_group) %>% summarise(n=n(),
+                                       `Time mean (SD)`=glue::glue('{time_mean=round(mean(hours),1)} ({time_sd=round(sd(hours),2)})'),
+                                       `Time median (95%CI)`=glue::glue('{median(hours)}  ({round(quantile(hours,0.05),1)} - { 
+                                       round(quantile(hours,0.95),1)})')) 
+knitr::kable(t2)
+```
+
+```{r plot6, echo=FALSE, fig.height=6, fig.width=8, message=FALSE, warning=FALSE}
+ggboxplot(dat1, x='blood_group', y='hours') + 
+    stat_summary(fun = "mean", geom = "point", shape=5) +
+  stat_compare_means(method = "kruskal.test", label.y=25) +
+  labs(y='Time (h)', x='Blood Group') +
+  rotate_x_text(angle =45) +
+  stat_compare_means(label = "p.signif", method = "wilcox.test", ref.group = "A POS")
+```
+
+## Time to Transfusion Blood Antibody Relationship
+
+```{r table4, message=FALSE, warning=FALSE, echo=FALSE}
+t3 <- dat1 %>% group_by(antibody) %>% summarise(n=n(),
+                                       `Time mean (SD)`=glue::glue('{time_mean=round(mean(hours),1)} ({time_sd=round(sd(hours),2)})'),
+                                       `Time median (95%CI)`=glue::glue('{median(hours)}  ({round(quantile(hours,0.05),1)} - { 
+                                       round(quantile(hours,0.95),1)})')) 
+knitr::kable(t3)
+```
+
+```{r plot7, echo=FALSE, fig.height=4, fig.width=8, message=FALSE, warning=FALSE}
+ggboxplot(dat1, x='antibody', y='hours') + 
+    stat_summary(fun = "mean", geom = "point", size = 3, shape=5) +
+  stat_compare_means(method = "kruskal.test", label.y=25, label.x=0.6) +
+  labs(y='Time (h)', x='Antibody Presence') +
+  rotate_x_text(angle =45) +
+  stat_compare_means(label = "p.signif", method = "wilcox.test", ref.group = "NEG")
+```
+
+## Time Series ABO
+
+```{r plot8, echo=FALSE, fig.height=10, fig.width=10, message=FALSE, warning=FALSE}
+ggplot(dat1, aes(time, hours)) + geom_point(alpha=0.2) + stat_smooth(method = "gam") + 
+  facet_wrap(~`blood_group`) + labs(x='Transfusion Date', y='Time (h)', title='Time to initiate a transfusion following a hemoglobin result') + 
+  theme_classic2() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## Time Series Antibody
+
+```{r plot9, echo=FALSE, fig.height=5, fig.width=10, message=FALSE, warning=FALSE}
+ggplot(dat1, aes(time, hours)) + geom_point(alpha=0.2) + stat_smooth(method = "gam") + 
+  facet_wrap(~antibody) + labs(x='Transfusion Date', y='Time (h)', title='Time to initiate a transfusion following a hemoglobin result') + 
+  theme_classic2() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## Plots for publication
+
+```{r plot10, echo=FALSE, fig.height=5, fig.width=10, message=FALSE, warning=FALSE}
+p1 <- ggboxplot(dat1, x='level', y='hours') +
+  stat_summary(fun = "mean", geom = "point", shape=5) +
+  labs(y='Time (h)', x='Hb levelel (g/dL)') +
+  stat_compare_means(label = "p.signif", method = "wilcox.test", ref.group = "≤4") + 
+  theme_linedraw() +
+    theme(axis.text.x = element_text(angle = 35, hjust = 1)) + 
+  annotate('text',x=0.65, y= 26, label='A', size=6)
+  
+p2 <- ggboxplot(dat1, x='blood_group', y='hours') + 
+    stat_summary(fun = "mean", geom = "point", shape=5) +
+  labs(y='', x='Blood Group') +
+  rotate_x_text(angle =45) +
+  stat_compare_means(label = "p.signif", method = "wilcox.test", ref.group = "A POS") +
+  theme_linedraw() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.title.y = element_blank(), 
+        axis.text.x = element_text(angle = 45, hjust = 1)) +
+  annotate('text',x=0.6, y= 26, label='B', size=6)
+  
+p3 <- ggboxplot(dat1, x='antibody', y='hours', width = 0.6) + 
+    stat_summary(fun = "mean", geom = "point", size = 1.7, shape=5) +
+  labs(y='', x='Antibody Presence') +
+  rotate_x_text(angle =45) +
+  stat_compare_means(label = "p.signif", method = "wilcox.test", ref.group = "NEG") +
+  theme_linedraw() +
+  theme(axis.text.y = element_blank(), axis.ticks.y = element_blank(), axis.title.y = element_blank(), 
+        axis.text.x = element_text(angle = 45, hjust = 1)) +
+  annotate('text',x=0.6, y=26, label='C', size=6)
+
+s1 <- dat1 %>% select(level, hours) %>% group_by(level) %>% get_summary_stats()
+s1_s <- ggsummarytable(s1, x='level', y = c("n", "median", "iqr"), ggtheme = theme_linedraw(), size = 4) + 
+  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank())
+
+s2 <- dat1 %>% select(blood_group, hours) %>% group_by(blood_group) %>% get_summary_stats()
+s2_s <- ggsummarytable(s2, x='blood_group', y = c("n", "median", "iqr"), ggtheme = theme_linedraw()) + 
+  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank())
+
+s3 <- dat1 %>% select(antibody, hours) %>% group_by(antibody) %>% get_summary_stats()
+s3_s <- ggsummarytable(s3, x='antibody', y = c("n", "median", "iqr"), ggtheme = theme_linedraw()) + 
+  theme(axis.title.x=element_blank(), axis.text.x=element_blank(), axis.ticks.x=element_blank(),
+        axis.title.y=element_blank(), axis.text.y=element_blank(), axis.ticks.y=element_blank())
+
+ggarrange(ggarrange(p1,p2,p3, nrow=1, widths = c(2,2,1)),
+          ggarrange(s1_s,s2_s,s3_s, nrow=1, widths = c(2,2,1)), nrow=2, heights = c(4,1))
+```
