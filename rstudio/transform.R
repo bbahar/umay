@@ -103,9 +103,14 @@ antibody <- antibody %>% select(1:2)
 bloodgroup <- bloodgroup %>% distinct(bloodgroup$FIN, .keep_all = TRUE)
 bloodgroup <- bloodgroup %>% select(1:2)
 bloodgroup <- inner_join(bloodgroup, antibody, by='FIN')
-# data to PostgreSQL -> exampledata
 exampledata <- left_join(Joined, bloodgroup, by='FIN')
 exampledata$`Blood group` <- fct_relevel(exampledata$`Blood group`, c('A POS'))
 exampledata$`Blood group` <- fct_explicit_na(exampledata$`Blood group`, "Unknown")
 exampledata$Antibody <- fct_explicit_na(exampledata$Antibody, "Unknown")
 exampledata <- mutate(exampledata, id=row_number(), .before=age_day)
+# data to PostgreSQL -> exampledata_n
+exampledata_1 <- data.frame(id=seq.int(nrow(fulldata)), age_year=fulldata$Age_year, time=fulldata$Start_DT, 
+                            fin=fulldata$FIN, unit_no=fulldata$Unit_no, volume=fulldata$Volume, 
+                            donor_center=fulldata$BDC, mrn=fulldata$MRN, location=fulldata$Patient_Loc, 
+                            hgb=fulldata$Hgb, hours=fulldata$hours, blood_group=fulldata$`Blood group`, 
+                            antibody=fulldata$Antibody, level=fulldata$lev)
