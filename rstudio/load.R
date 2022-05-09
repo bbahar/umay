@@ -7,9 +7,9 @@ con <- dbConnect(Postgres(),
                  password = 'analytics')
 # Create and write a table using generic types
 # dbWriteTable(con, 'transfusion_data', <your_data_table>)
-dbWriteTable(con, 'transfusion_hgb_2021', transfusion_example_table)
+dbWriteTable(con, 'transfusion_hgb_2021', transfusion_example_data)
 # Append more data
-# dbAppendTable(con, 'transfusion_data', <your_data_additional_table>)
+# dbAppendTable(con, 'transfusion_hgb_2021', <additional_data>)
 # Alternative method
 # Create table
 dbExecute(con, "CREATE TABLE transfusion_hgb_2021 (
@@ -28,5 +28,5 @@ dbExecute(con, "CREATE TABLE transfusion_hgb_2021 (
                antibody text,
                level text)")
 # Append data to table
-dbAppendTable(con, 'transfusion_hgb_2021', transfusion_example_table)
+dbAppendTable(con, 'transfusion_hgb_2021', transfusion_example_data)
 # Read first 10 entries
