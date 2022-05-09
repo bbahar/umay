@@ -10,23 +10,22 @@ con <- dbConnect(Postgres(),
 dbWriteTable(con, 'transfusion_hgb_2021', transfusion_example_data)
 # Append more data
 # dbAppendTable(con, 'transfusion_hgb_2021', <additional_data>)
-# Alternative method
+# Alternative method (uncomment for use this method)
 # Create table
-dbExecute(con, "CREATE TABLE transfusion_hgb_2021 (
-               id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-               age_year double precision,
-               time timestamp without time zone,
-               fin double precision,
-               unit_no text,
-               volume double precision,
-               donor_center text,
-               mrn text,
-               location text,
-               hgb double precision,
-               hours double precision,
-               blood_group text,
-               antibody text,
-               level text)")
+# dbExecute(con, "CREATE TABLE transfusion_hgb_2021 (
+#                id integer GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+#                age_year double precision,
+#                time timestamp without time zone,
+#                fin double precision,
+#                unit_no text,
+#                volume double precision,
+#                donor_center text,
+#                mrn text,
+#                location text,
+#                hgb double precision,
+#                hours double precision,
+#                blood_group text,
+#                antibody text,
+#                level text)")
 # Append data to table
-dbAppendTable(con, 'transfusion_hgb_2021', transfusion_example_data)
-# Read first 10 entries
+# dbAppendTable(con, 'transfusion_hgb_2021', transfusion_example_data)
