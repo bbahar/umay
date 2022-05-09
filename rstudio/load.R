@@ -7,7 +7,7 @@ con <- dbConnect(Postgres(),
                  password = 'analytics')
 # Create and write a table using generic types
 # dbWriteTable(con, 'transfusion_data', <your_data_table>)
-dbWriteTable(con, 'transfusion_data', transfusion_example_table)
+dbWriteTable(con, 'transfusion_hgb_2021', transfusion_example_table)
 # Append more data
 # dbAppendTable(con, 'transfusion_data', <your_data_additional_table>)
 # Alternative method
