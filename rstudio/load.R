@@ -29,3 +29,5 @@ dbReadTable(con, "transfusion_hgb_2021")
 dbAppendTable(con, 'transfusion_hgb_2021', transfusion_example_table)
 # Read first 10 entries
 dbGetQuery(con, "SELECT * FROM transfusion_hgb_2021 LIMIT 10")
+# Create and write a table using generic types
+dbWriteTable(con, 'transfusion_eee', <your_table_name_here>)
