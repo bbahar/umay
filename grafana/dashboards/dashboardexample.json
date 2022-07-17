@@ -118,7 +118,7 @@
           ]
         }
       ],
-      "title": "Patients",
+      "title": "Transfusions",
       "type": "stat"
     },
     {
@@ -200,7 +200,7 @@
           ]
         }
       ],
-      "title": "Transfusions",
+      "title": "Patients",
       "type": "stat"
     },
     {

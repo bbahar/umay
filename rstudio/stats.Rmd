@@ -13,7 +13,7 @@ library(forcats)
 ### Hemoglobin result to start of RBC transfusion
 
 ```{r data prep, message=FALSE, warning=FALSE, echo=FALSE}
-dat1 <- transfusion_example_table
+dat1 <- transfusion_example_data
 dat1$level <- fct_relevel(dat1$level, c('≤4', '>4 to ≤5', '>5 to ≤6', 
                                         '>6 to ≤7', '>7 to ≤8', '>8 to ≤9', 
                                         '>9 to ≤10', '>10 to ≤11', '>11 to ≤12', 
